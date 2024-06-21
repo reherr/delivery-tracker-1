@@ -55,14 +55,14 @@
 
 <hr>
 
-  <div class="row">
+  <div class="row waiting_on">
     <div class="col">
 
       <h2>Waiting on</h2>
 
       <ul class="list-group">
         <% @deliveries_waiting.each do |a_delivery|%>
-          <li class="list-group-item waiting_on">
+          <li class="list-group-item">
             <div><%= a_delivery.description %></div>
 
             <div>
@@ -89,14 +89,14 @@
 
   <hr>
 
-  <div class="row">
+  <div class="row received">
     <div class="col">
 
       <h2>Received</h2>
 
       <ul class="list-group">
         <% @deliveries_received.each do |a_delivery|%>
-          <li class="list-group-item received">
+          <li class="list-group-item">
             <div><%= a_delivery.description %></div>
 
             <div>
