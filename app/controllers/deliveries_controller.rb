@@ -43,7 +43,7 @@ class DeliveriesController < ApplicationController
     # the_delivery.description = params.fetch("query_description")
     # the_delivery.supposed_to_arrive_on = params.fetch("query_supposed_to_arrive_on")
     # the_delivery.details = params.fetch("query_details")
-    the_delivery.arrived = params.fetch("query_arrived", false)
+    the_delivery.arrived = params.fetch("arrived")
 
     if the_delivery.valid?
       the_delivery.save
