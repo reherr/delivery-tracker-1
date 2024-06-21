@@ -1,148 +1,113 @@
-<div>
-  <div>
+<div class="container mt-4">
+  <div class="row">
+    <div class="col">
     <h1>
-      List of all deliveries
+      Delivery Tracker
     </h1>
+
+    <p>Know if something gets lost in the mail.</p>
   </div>
 </div>
 
 <hr>
-
-<div>
-  <div>
+<div class="row">
+  <div class="col">
     <h2>
-      Add a new delivery
+      Expecting a package?
     </h2>
 
     <form action="/insert_delivery" method="post">
-      <div>
-        <label for="user_id_box">
-          User
-        </label>
+      
 
-        <input type="text" id="user_id_box" name="query_user_id">
-      </div>
-
-      <div>
+        <input type="hidden" name="query_user_id" value="<%= current_user.id %>">
+      <div class="form-group"> 
         <label for="description_box">
           Description
         </label>
 
-        <input type="text" id="description_box" name="query_description">
+        <input type="text" class="form-control" id="description_box" name="query_description">
       </div>
 
-      <div>
+      <div class="form-group">
         <label for="supposed_to_arrive_on_box">
           Supposed to arrive on
         </label>
 
-        <input type="date" id="supposed_to_arrive_on_box" name="query_supposed_to_arrive_on">
+        <input type="date" class="form-control" id="supposed_to_arrive_on_box" name="query_supposed_to_arrive_on">
       </div>
 
-      <div>
+      <div class="form-group">
         <label for="details_box">
           Details
         </label>
 
-        <input type="text" id="details_box" name="query_details">
+        <textarea id="details_box" class="form-control" name="query_details" rows="3"></textarea>
       </div>
 
-      <div>
-        <input type="checkbox" id="arrived_box" name="query_arrived" value="1">
 
-        <label for="arrived_box">Arrived</label>
-      </div>
-
-      <button>
-        Create delivery
+      <input type="hidden" name="query_arrived" value="false">
+      <button class="btn btn-primary">
+        Log delivery
       </button>
     </form>
   </div>
 </div>
 
 <hr>
-<div>
-  <div>
-    <table border="1">
-      <tr>
-        <th>
-          ID
-        </th>
 
-        <th>
-          User
-        </th>
+  <div class="row">
+    <div class="col">
 
-        <th>
-          Description
-        </th>
+      <h2>Waiting on</h2>
 
-        <th>
-          Supposed to arrive on
-        </th>
+      <ul class="list-group">
+        <% @deliveries_waiting.each do |a_delivery|%>
+          <li class="list-group-item waiting_on">
+            <div><%= a_delivery.description %></div>
 
-        <th>
-          Details
-        </th>
+            <div>
+              <% date_to_display = a_delivery.supposed_to_arrive_on %>
+              <% css_class = date_to_display < Date.today - 3 ? 'past-date' : 'future-date' %>
+              <%= content_tag(:span, "Supposed to arrive on #{date_to_display.strftime("%Y-%m-%d")}", :class => css_class) %>
+            </div>
 
-        <th>
-          Arrived
-        </th>
+            <div>
+              <%= a_delivery.details %>
+            </div>
 
-        <th>
-          Created at
-        </th>
+            <div>
+              <form action="/modify_delivery/<%= a_delivery.id %>" method="post">
+                <input type="hidden" name="arrived" value="true">
+                <button class="btn btn-success">Mark as received</button>
+              </form>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
 
-        <th>
-          Updated at
-        </th>
+  <hr>
 
-        <th>
-        </th>
-      </tr>
+  <div class="row">
+    <div class="col">
 
-      <% @list_of_deliveries.each do |a_delivery| %>
-      <tr>
-        <td>
-          <%= a_delivery.id %>
-        </td>
+      <h2>Received</h2>
 
-        <td>
-          <%= a_delivery.user_id %>
-        </td>
+      <ul class="list-group">
+        <% @deliveries_received.each do |a_delivery|%>
+          <li class="list-group-item received">
+            <div><%= a_delivery.description %></div>
 
-        <td>
-          <%= a_delivery.description %>
-        </td>
-
-        <td>
-          <%= a_delivery.supposed_to_arrive_on %>
-        </td>
-
-        <td>
-          <%= a_delivery.details %>
-        </td>
-
-        <td>
-          <%= a_delivery.arrived %>
-        </td>
-
-        <td>
-          <%= time_ago_in_words(a_delivery.created_at) %> ago
-        </td>
-        <td>
-          <%= time_ago_in_words(a_delivery.updated_at) %> ago
-        </td>
-
-        <td>
-          <a href="/deliveries/<%= a_delivery.id %>">
-            Show details
-          </a>
-        </td>
-      </tr>
-      <% end %>
-    </table>
+            <div>
+              <small>
+                <%= "Updated #{time_ago_in_words(a_delivery.updated_at)} ago" %>
+                <a href="/delete_delivery/<%= a_delivery.id %>" class="btn btn-danger btn-sm">Delete</a>
+              </small>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
   </div>
 </div>
-
-<hr>

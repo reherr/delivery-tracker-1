@@ -3,8 +3,8 @@ class DeliveriesController < ApplicationController
     matching_deliveries = Delivery.where({ :user_id => current_user.id })
 
     list_of_deliveries = matching_deliveries.order({ :created_at => :asc })
-    @deliveries_waiting = list_of_deliveries.where ({ :arrived => "false" })
-    @deliveries_received = list_of_deliveries.where ({ :arrived => "true" })
+    @deliveries_waiting = @list_of_deliveries.where ({ :arrived => "false" })
+    @deliveries_received = @list_of_deliveries.where ({ :arrived => "true" })
 
     render({ :template => "deliveries/index" })
   end
